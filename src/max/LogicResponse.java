@@ -11,6 +11,49 @@ public class LogicResponse<T> {
 	public T[] arrayReturned = null;
 	public List<T> listReturned = null;
 	public LogicResponse() {}
+	public LogicResponse(boolean status, String message) {
+		die(status, message);
+	}
+	public LogicResponse(Exception err) {
+		err(err);
+	}
+	public LogicResponse(T obj) {
+		fill(obj);
+	}
+	public LogicResponse(T[] arr) {
+		fill(arr);
+	}
+	public LogicResponse(List<T> list) {
+		fill(list);
+	}
+	public void die(boolean status, String message) {
+		this.status = status;
+		this.message = message;
+	}
+	public void err(Exception err) {
+		this.status = false;
+		this.exception = err;
+		this.errorMessage = err.getMessage();
+		
+	}
+	public void fill(T object) {
+		if(object != null) {
+			this.objectReturned = object;
+			this.status = true;
+		}
+	}
+	public void fill(T[] arr) {
+		if(arr != null) {
+			this.arrayReturned = arr;
+			this.status = arr.length >= 0;
+		}
+	}
+	public void fill(List<T> list) {
+		if(list != null) {
+			this.listReturned = list;
+			this.status = list.size() >= 0;
+		}
+	}
 	public String getMessage() {
 		return message;
 	}
