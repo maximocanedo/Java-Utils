@@ -80,6 +80,10 @@ public class Dictionary extends HashMap<String, Object> {
 		return z;
 	}
 	
+	public <T> T $(String key) {
+		return (T) get(key);
+	}
+	
 	/**
 	 * Analiza una consulta SQL y extrae los parámetros de esa consulta que están en forma de \@key. 
 	 * @param query La consulta SQL a ser analizada.
@@ -105,5 +109,6 @@ public class Dictionary extends HashMap<String, Object> {
         }
         return params;
 	}
+	
 	
 }
