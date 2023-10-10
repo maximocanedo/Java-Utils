@@ -80,8 +80,13 @@ public class Dictionary extends HashMap<String, Object> {
 		return z;
 	}
 	
+	/**
+	 * Returns the value to which the specified key is mapped, or null if this map contains no mapping for the key.
+	 * @param key - the key whose associated value is to be returned
+	 */
+	@SuppressWarnings("unchecked")
 	public <T> T $(String key) {
-		return (T) get(key);
+		return (T)get(key);
 	}
 	
 	/**

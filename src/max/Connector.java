@@ -82,7 +82,7 @@ public class Connector implements IConnector {
 	        while (rs.next()) {
 	            Dictionary row = new Dictionary();
 	            for (int i = 1; i <= columnCount; i++) {
-	                String columnName = metaData.getColumnName(i);
+	                String columnName = metaData.getColumnLabel(i);
 	                Object columnValue = rs.getObject(i);
 	                row.put(columnName, columnValue);
 	            }
