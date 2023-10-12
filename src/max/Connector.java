@@ -45,6 +45,11 @@ public class Connector implements IConnector {
 	 */
 	@Override
 	public Connection openConnection() throws SQLException {
+		try{
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e ) {
+			e.printStackTrace();
+		}
 		Connection connection = null;
         try {
             connection = DriverManager.getConnection(this.settings.buildURI(this.database), this.settings.user.username, this.settings.user.password);
