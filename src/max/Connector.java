@@ -67,7 +67,7 @@ public class Connector implements IConnector {
 	 * @returns Objeto TransactionResponse con el resultado de la operación.
 	 */
 	@Override
-	public TransactionResponse<Dictionary> fetch(String query, Object[] parameters) throws SQLException {
+	public TransactionResponse<Dictionary> fetch(String query, Object[] parameters) {//throws SQLException {
 		TransactionResponse<Dictionary> finalResult = new TransactionResponse<Dictionary>();
 	    Connection cn = null;
 	    ResultSet rs = null;
@@ -94,10 +94,12 @@ public class Connector implements IConnector {
 	            dataList.add(row);
 	        }
 	        finalResult.rowsReturned = dataList;
-	        return finalResult;
+	        finalResult.status = true;
 	    } catch (SQLException e) {
 	        e.printStackTrace();
-	        throw e;
+	        finalResult.dbError = e;
+	        finalResult.status = false;
+	       // throw e;
 	    } finally {
 	        try {
 	            if (cn != null) {
@@ -105,8 +107,11 @@ public class Connector implements IConnector {
 	            }
 	        } catch (SQLException e) {
 	            e.printStackTrace();
+	            finalResult.dbError = e;
+	            finalResult.status = false;
 	        }
 	    }
+        return finalResult;
 	}
 	
 	/**
@@ -117,7 +122,7 @@ public class Connector implements IConnector {
 	 * @returns Objeto TransactionResponse con el resultado de la operación.
 	 */
 	@Override
-	public TransactionResponse<Dictionary> fetch(String query, Dictionary parameters) throws SQLException {
+	public TransactionResponse<Dictionary> fetch(String query, Dictionary parameters){// throws SQLException {
 		try {
 			Object[] params = parameters.getParameters(query);
 			query = query.replaceAll("@\\w+", "?");

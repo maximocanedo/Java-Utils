@@ -91,23 +91,23 @@ public class Main {
 
     public static void testConnector() {
         Connector x = new Connector(Connector.DB.bdPersonas);
-        try {
-            // Prueba de fetch
-            TransactionResponse<Dictionary> t = x.fetch(
+        TransactionResponse<Dictionary> t = x.fetch(
                 "SELECT * FROM Personas WHERE Nombre LIKE @nombre",
                 Dictionary.fromArray(
                     "nombre", "%e"
                 )
             );
-
-            List<Dictionary> ppl = t.rowsReturned;
+        if(t.dbError != null) {
+        	List<Dictionary> ppl = t.rowsReturned;
             for (Dictionary p : ppl) {
                 String name = (String) p.get("Nombre");
                 System.out.println(name);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } else {
+        	t.dbError.printStackTrace();
         }
+            
+       
     }
 
 }

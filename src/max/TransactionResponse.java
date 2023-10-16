@@ -10,6 +10,12 @@ public class TransactionResponse<T> {
 	public T objectReturned = null;
 	public SQLException dbError = null;
 	public Exception error = null;
+	public boolean status = false;
+	public boolean nonEmptyResult() {
+		return rowsReturned != null && rowsReturned.size() > 0;
+	}
+	
+	
 	public int getRowsAffected() {
 		return rowsAffected;
 	}
