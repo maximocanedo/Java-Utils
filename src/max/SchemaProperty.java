@@ -1,5 +1,6 @@
 package max;
 
+import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,6 +14,7 @@ public class SchemaProperty {
 	public int maxlength = Integer.MAX_VALUE;
 	public String matches = null;
 	public Object defaultValue = null;
+	public ReferenceInfo ref = null; 
 	
 	public SchemaProperty() {
 	}
@@ -20,11 +22,28 @@ public class SchemaProperty {
 		System.out.println(e);
 	}
 	
+	public boolean validateReference(Object obj) {
+		try {
+			TransactionResponse<Dictionary> f = new Connector(ref.getDbName()).fetch(
+					"SELECT COUNT(" + ref.getColumnName() + ") AS counted FROM " + ref.getTableName() 
+					+ " WHERE " + ref.getColumnName() + " = @obj ", Dictionary.fromArray("obj", obj));
+			if(f.nonEmptyResult()) {
+				Dictionary firstRow = f.rowsReturned.get(0);
+				long c = firstRow.$("counted");
+				return c > 0;
+			} 
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 	public SchemaValidationResult validate(Object obj, String key) {
 		boolean validateType = type.isInstance(obj);
 		boolean validatedLimits = true;
 		boolean validatedLength = true;
 		boolean validatedPattern = true;
+		boolean validatedRef = true;
 		
 		if(!validateType) return new SchemaValidationResult(key, false, "A " + obj.getClass().getName() + " object was provided, but a " + type.getName() + " was expected. ");
 		if(obj instanceof Number) {
@@ -46,11 +65,19 @@ public class SchemaProperty {
 			if(!validatedPattern) return new SchemaValidationResult(key, false, "The string does not match the regular expression. ");
 			
 		}
+		
+		if(ref != null) {
+			validatedRef = validateReference(obj);
+			if(!validatedRef) return new SchemaValidationResult(key, false, "The object does not exist in the referenced table. ");
+			
+		}
+		
 		return new SchemaValidationResult(key, (
 			validateType 
 			&& validatedLimits 
 			&& validatedLength 
 			&& validatedPattern
+			&& validatedRef
 		), "");
 	}
 	

@@ -7,62 +7,47 @@ import java.util.List;
 import max.*;
 
 public class Main {
-	public static void testSchemas() {
-		// Usuarios
-    	Schema userSchema = Schema.fromArray(
-    			"username", new SchemaProperty() {{
+	
+    public static void noMain(String[] args) {
+    	Schema persona = Schema.fromArray(
+    			"id", new SchemaProperty() {{
+    				required = false;
+    				type = Integer.class;
+    			}},
+    			"nombre", new SchemaProperty() {{
     				required = true;
     				type = String.class;
-    				matches = "^[a-zA-Z0-9_-]{3,16}$";
+    				maxlength = 50;
+    				minlength = 2;
     			}},
-    			"biography", new SchemaProperty() {{
-    				type = String.class;
-    			}},
-    			"age", new SchemaProperty() {{
+    			"edad", new SchemaProperty() {{
     				required = true;
-    				type = Number.class;
-    				min = 18;
-    			}},
-    			"birthdate", new SchemaProperty() {{
-    				type = Calendar.class;
-    				required = true;
+    				type = Integer.class;
     			}}
     		);
-    	Calendar fecha1 = Calendar.getInstance();
-    	fecha1.set(2003, Calendar.NOVEMBER, 12);
-    	Calendar fecha2 = Calendar.getInstance();
-    	fecha2.set(2010, Calendar.APRIL, 1);
-    	Dictionary datosCorrectosDePrueba = Dictionary.fromArray( // Todo bien
-    			"username", "usuarioEjemplo",
-    			"biography", "Usuario de ejemplo 123",
-    			"age", 24,
-    			"birthdate", fecha1
+    	Schema direccion = Schema.fromArray(
+    			"id", new SchemaProperty() {{
+    				required = false;
+    				type = Integer.class;
+    			}},
+    			"direccion", new SchemaProperty() {{
+    				required = true;
+    				type = String.class;
+    				maxlength = 100;
+    			}},
+    			"persona_id", new SchemaProperty() {{
+    				required = true;
+    				type = Integer.class;
+    				ref = new ReferenceInfo("personas", "id", "segurosgroup");
+    			}}
     		);
-    	Dictionary datosIncorrectosPrueba = Dictionary.fromArray( // Usuario muy corto
-    			"username", 34,
-    			"age", 24,
-    			"birthdate", fecha1
-    		);
-    	Dictionary datosIncorrectos2 = Dictionary.fromArray( // Edad menor al mínimo admitido
-    			"username", "usuarioEj1234",
-    			"age", 10,
-    			"birthdate", fecha2
-    		);
-    	Dictionary datosIncorrectos3 = Dictionary.fromArray( // Le falta el campo "username".
-    			"age", 50,
-    			"birthdate", fecha2
-    		);
-    	SchemaValidationResult v1 = userSchema.validate(datosCorrectosDePrueba);
-    	System.out.println("V1: (" + v1.status + ") "+ v1.message);
-    	SchemaValidationResult v2 = userSchema.validate(datosIncorrectosPrueba);
-    	System.out.println("V1: (" + v2.status + ") "+ v2.message);
-    	SchemaValidationResult v3 = userSchema.validate(datosIncorrectos2);
-    	System.out.println("V1: (" + v3.status + ") "+ v3.message);
-    	SchemaValidationResult v4 = userSchema.validate(datosIncorrectos3);
-    	System.out.println("V1: (" + v4.status + ") "+ v4.message);
-	}
-    public static void main(String[] args) {
-    	testSchemas();
+    	
+    	SchemaValidationResult v = direccion.validate(Dictionary.fromArray(
+    		"id", 33,
+    		"direccion", "Avenida Siempreviva 753",
+    		"persona_id", 99999999
+    	));
+    	System.out.println(v.message);
     	
     }
 
