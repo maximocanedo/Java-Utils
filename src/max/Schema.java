@@ -3,6 +3,7 @@ package max;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("serial")
 public class Schema extends HashMap<String, SchemaProperty> {
 	/**
 	 * Crea un Dictionary en base a un array.

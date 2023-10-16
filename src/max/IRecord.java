@@ -1,7 +1,6 @@
 package max;
 
 import java.sql.SQLException;
-import java.util.List;
 
 // Agregar Exceptions como p.ej. UnformattedDataException, RecordNotExistsException
 public interface IRecord<T, Y> {
