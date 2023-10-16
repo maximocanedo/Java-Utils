@@ -62,7 +62,7 @@ public class Main {
     	System.out.println("V1: (" + v4.status + ") "+ v4.message);
 	}
     public static void main(String[] args) {
-    	
+    	testSchemas();
     	
     }
 
@@ -91,23 +91,23 @@ public class Main {
 
     public static void testConnector() {
         Connector x = new Connector(Connector.DB.bdPersonas);
-        TransactionResponse<Dictionary> t = x.fetch(
+        try {
+            // Prueba de fetch
+            TransactionResponse<Dictionary> t = x.fetch(
                 "SELECT * FROM Personas WHERE Nombre LIKE @nombre",
                 Dictionary.fromArray(
                     "nombre", "%e"
                 )
             );
-        if(t.dbError != null) {
-        	List<Dictionary> ppl = t.rowsReturned;
+
+            List<Dictionary> ppl = t.rowsReturned;
             for (Dictionary p : ppl) {
                 String name = (String) p.get("Nombre");
                 System.out.println(name);
             }
-        } else {
-        	t.dbError.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-            
-       
     }
 
 }

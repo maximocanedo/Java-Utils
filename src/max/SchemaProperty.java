@@ -15,7 +15,6 @@ public class SchemaProperty {
 	public Object defaultValue = null;
 	
 	public SchemaProperty() {
-		
 	}
 	protected void out(Object e) {
 		System.out.println(e);
@@ -23,9 +22,11 @@ public class SchemaProperty {
 	
 	public SchemaValidationResult validate(Object obj, String key) {
 		boolean validateType = type.isInstance(obj);
-			if(!validateType) return new SchemaValidationResult(key, false, "A " + obj.getClass().getName() + " object was provided, but a " + type.getName() + " was expected. ");
-		
 		boolean validatedLimits = true;
+		boolean validatedLength = true;
+		boolean validatedPattern = true;
+		
+		if(!validateType) return new SchemaValidationResult(key, false, "A " + obj.getClass().getName() + " object was provided, but a " + type.getName() + " was expected. ");
 		if(obj instanceof Number) {
 			// Validamos cosas de números.
 			double val = ((Number) obj).doubleValue();
@@ -33,8 +34,6 @@ public class SchemaProperty {
 				if(!validatedLimits) 
 					return new SchemaValidationResult(key, false, "The number is out of the allowed range, which is " + min + "-" + max + ". ");
 		}
-		boolean validatedLength = true;
-		boolean validatedPattern = true;
 		if(obj instanceof String) {
 			String s = (String) obj;
 			validatedLength = (s.length() >= minlength) && (s.length() <= maxlength);
@@ -42,8 +41,7 @@ public class SchemaProperty {
 				Pattern p = Pattern.compile(matches);
 				Matcher m = p.matcher(s);
 				validatedPattern = m.matches();
-			}
-			
+			}		
 			if(!validatedLength) return new SchemaValidationResult(key, false, "The string's length is out of the allowed range. ");
 			if(!validatedPattern) return new SchemaValidationResult(key, false, "The string does not match the regular expression. ");
 			

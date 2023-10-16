@@ -67,7 +67,7 @@ public class Connector implements IConnector {
 	 * @returns Objeto TransactionResponse con el resultado de la operación.
 	 */
 	@Override
-	public TransactionResponse<Dictionary> fetch(String query, Object[] parameters) {//throws SQLException {
+	public TransactionResponse<Dictionary> fetch(String query, Object[] parameters) throws SQLException {
 		TransactionResponse<Dictionary> finalResult = new TransactionResponse<Dictionary>();
 	    Connection cn = null;
 	    ResultSet rs = null;
@@ -99,7 +99,7 @@ public class Connector implements IConnector {
 	        e.printStackTrace();
 	        finalResult.dbError = e;
 	        finalResult.status = false;
-	       // throw e;
+	        throw e;
 	    } finally {
 	        try {
 	            if (cn != null) {
@@ -122,7 +122,7 @@ public class Connector implements IConnector {
 	 * @returns Objeto TransactionResponse con el resultado de la operación.
 	 */
 	@Override
-	public TransactionResponse<Dictionary> fetch(String query, Dictionary parameters){// throws SQLException {
+	public TransactionResponse<Dictionary> fetch(String query, Dictionary parameters) throws SQLException {
 		try {
 			Object[] params = parameters.getParameters(query);
 			query = query.replaceAll("@\\w+", "?");
@@ -174,12 +174,14 @@ public class Connector implements IConnector {
 	        int rowsAffected = ps.executeUpdate();
 	        cn.commit();
 	        t.rowsAffected = rowsAffected;
+	        t.status = true;
 	         // ÉXITO
 	    } catch (SQLException e) {
 	        if (cn != null) {
 	            cn.rollback(); // En caso de excepción, DESHACER CAMBIOS EN EL DB
 	        }
 	        t.dbError = e;
+	        t.status = false;
 	        e.printStackTrace();
 	        throw e;
 	    } finally {
@@ -189,6 +191,8 @@ public class Connector implements IConnector {
 	            }
 	        } catch (SQLException e) {
 	            e.printStackTrace();
+		        t.status = false;
+		        t.dbError = e;
 	        }
 	    }
 	    return t;
@@ -211,6 +215,7 @@ public class Connector implements IConnector {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return new TransactionResponse<Dictionary>() {{
+				status = false;
 				error = e;
 			}};
 		}
