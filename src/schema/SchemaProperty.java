@@ -1,4 +1,4 @@
-package max;
+package schema;
 
 import java.lang.reflect.Field;
 import java.sql.SQLException;
@@ -6,6 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import data.Dictionary;
+import data.TransactionResponse;
+import net.Connector;
+
 import java.sql.Types;
 
 public class SchemaProperty {

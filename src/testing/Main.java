@@ -4,7 +4,11 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
 
-import max.*;
+import data.Dictionary;
+import data.TransactionResponse;
+import net.Connector;
+import schema.Schema;
+import schema.SchemaProperty;
 
 public class Main {
 	public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package max;
+package schema;
 
 public class SchemaValidationResult {
 	public boolean status;

@@ -1,4 +1,4 @@
-package max;
+package oops;
 /**
  * Excepción que se produce cuando se intenta acceder al valor de un parámetro que no existe.
  */

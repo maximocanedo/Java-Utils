@@ -1,4 +1,4 @@
-package max;
+package net;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,6 +8,10 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import data.Dictionary;
+import data.TransactionResponse;
+import oops.ParameterNotExistsException;
 
 public class Connector implements IConnector {
 	
@@ -23,21 +27,33 @@ public class Connector implements IConnector {
 	public ConnectorSettings settings;
 	public String database;
 	
+	private static String defaultDatabase = DB.bdPersonas;
+	private static ConnectorSettings defaultSettings = ConnectorSettings.DEFAULT;
+	
+	public static void setDefaultDatabase(String database) {
+		defaultDatabase = database;
+	}
+	public static void setDefaultSettings(ConnectorSettings data) {
+		defaultSettings = data;
+	}
+	public static String getDefaultDatabase() { return defaultDatabase; }
+	public static ConnectorSettings getDefaultSettings() { return defaultSettings; }
+	
 	public Connector(ConnectorSettings data, String database) {
 		this.settings = data;
 		this.database = database;
 	}
 	
 	public Connector(ConnectorSettings data) {
-		this(data, DB.bdPersonas);
+		this(data, defaultDatabase);
 	}
 	
 	public Connector(String database) {
-		this(ConnectorSettings.DEFAULT, database);
+		this(defaultSettings, database);
 	}
 	
 	public Connector() {
-		this(ConnectorSettings.DEFAULT, DB.bdPersonas);
+		this(defaultSettings, defaultDatabase);
 	}
 	
 	/**

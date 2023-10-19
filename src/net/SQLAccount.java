@@ -1,4 +1,4 @@
-package max;
+package net;
 
 public class SQLAccount {
 	public String username;

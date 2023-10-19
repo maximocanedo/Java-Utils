@@ -1,7 +1,8 @@
-package max;
+package schema;
 
 import java.util.Collection;
-import java.util.Map;
+
+import data.Dictionary;
 
 public class SchemaModel extends Dictionary {
 	private Schema schema;

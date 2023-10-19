@@ -1,8 +1,12 @@
-package max;
+package data;
 
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import oops.KeyIsNotAStringException;
+import oops.OddNumberOfElementsException;
+import oops.ParameterNotExistsException;
 
 public class Dictionary extends HashMap<String, Object> {
 
