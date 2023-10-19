@@ -359,3 +359,25 @@ public void compile()
 ```java
 animales.compile();
 ```
+
+### Método `getTableName()`
+Este método devuelve el nombre de tabla asociado al `Schema`.
+#### Sintaxis
+```java
+public String getTableName()
+```
+#### Ejemplo de uso
+```java
+String nombreDeTabla = animales.getTableName();
+```
+
+### Método `getDbName()`
+Este método devuelve el nombre de base de datos asociado al `Schema`.
+#### Sintaxis
+```java
+public String getDbName()
+```
+#### Ejemplo de uso
+```java
+String nombreDeLaBaseDeDatos = animales.getDbName();
+```
