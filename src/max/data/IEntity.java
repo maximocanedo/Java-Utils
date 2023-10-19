@@ -1,4 +1,4 @@
-package data;
+package max.data;
 
 public interface IEntity {
 	public String toString();

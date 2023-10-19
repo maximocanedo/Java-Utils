@@ -1,4 +1,4 @@
-package oops;
+package max.oops;
 
 @SuppressWarnings("serial")
 public class ValueIsNotASchemaPropertyException extends Exception {

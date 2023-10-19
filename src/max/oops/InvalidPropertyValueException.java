@@ -1,4 +1,4 @@
-package oops;
+package max.oops;
 
 @SuppressWarnings("serial")
 public class InvalidPropertyValueException extends Exception {

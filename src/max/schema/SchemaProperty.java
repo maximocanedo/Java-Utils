@@ -1,4 +1,4 @@
-package schema;
+package max.schema;
 
 import java.lang.reflect.Field;
 import java.sql.SQLException;
@@ -7,9 +7,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import data.Dictionary;
-import data.TransactionResponse;
-import net.Connector;
+import max.data.Dictionary;
+import max.data.TransactionResponse;
+import max.net.Connector;
 
 import java.sql.Types;
 

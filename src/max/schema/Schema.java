@@ -1,12 +1,12 @@
-package schema;
+package max.schema;
 
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import data.Dictionary;
-import data.TransactionResponse;
-import net.Connector;
+import max.data.Dictionary;
+import max.data.TransactionResponse;
+import max.net.Connector;
 
 @SuppressWarnings("serial")
 public class Schema extends HashMap<String, SchemaProperty> {

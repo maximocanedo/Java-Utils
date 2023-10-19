@@ -1,4 +1,4 @@
-package data;
+package max.data;
 
 import java.util.List;
 
