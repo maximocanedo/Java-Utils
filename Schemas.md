@@ -258,3 +258,104 @@ animales.setProperties(
 );
 ```
 
+### Método `validate()`
+Este método recibe un objeto `Dictionary` y valida su contenido en base a las limitaciones de las propiedades del `Schema`.
+#### Sintaxis
+```java
+public SchemaValidationResult validate(Dictionary data)
+```
+#### Parámetros
+| Parámetro | Tipo       | Descripción                      |
+|-----------|------------|----------------------------------|
+| data      | Dictionary | Diccionario con datos a validar. |
+#### Ejemplo de uso
+```java
+Dictionary datosAValidar = Dictionary.fromArray( "nombre", "Canguro Australiano" );
+SchemaValidationResult res = animales.validate();
+```
+#### Valor de retorno
+Este método retorna un objeto de tipo `SchemaValidationResult`, que contiene detalles sobre el resultado de la validación. 
+
+### Método `create()`
+Este método valida y añade uno o varios registros a la base de datos vinculada al `Schema`.
+#### Sintaxis
+```java
+public TransactionResponse<?> create(Dictionary... data) throws SQLException, Exception
+```
+#### Parámetros
+| Parámetro | Tipo       | Descripción                             |
+|-----------|------------|-----------------------------------------|
+| data      | Dictionary | Diccionarios con los valores a agregar. |
+
+#### Ejemplo de uso
+```java
+try {
+   TransactionResponse<?> res = animales.create(
+      Dictionary.fromArray("nombre", "Koala"),
+      Dictionary.fromArray("nombre", "Carpincho")
+   );
+} catch (Exception e) {
+   e.printStackTrace();
+}
+```
+#### Valor de retorno
+Este método retorna un objeto de tipo `TransactionResponse` con el resultado de la operación.
+
+### Método `modify()`
+Este método modifica un registro a la base de datos vinculada al `Schema`.
+#### Sintaxis
+```java
+public TransactionResponse<?> modify(Dictionary newValues, Dictionary where) throws SQLException, Exception
+```
+#### Parámetros
+| Parámetro | Tipo       | Descripción                                                                               |
+|-----------|------------|-------------------------------------------------------------------------------------------|
+| newValues | Dictionary | Diccionario con los valores a modificar.                                                  |
+| where     | Dictionary | Diccionario que sirve como filtro para seleccionar los registros que se desean modificar. |
+
+#### Ejemplo de uso
+```java
+try {
+   TransactionResponse<?> res = animales.modify(
+      Dictionary.fromArray("nombre", "Colibrí"),
+      Dictionary.fromArray("nombre", "Koala")
+   );
+} catch (Exception e) {
+   e.printStackTrace();
+}
+```
+
+### Método `delete()`
+Este método elimina un registro a la base de datos vinculada al `Schema`.
+#### Sintaxis
+```java
+public TransactionResponse<?> delete(Dictionary where) throws SQLException, Exception
+```
+#### Parámetros
+| Parámetro | Tipo       | Descripción                                                                               |
+|-----------|------------|-------------------------------------------------------------------------------------------|
+| where     | Dictionary | Diccionario que sirve como filtro para seleccionar los registros que se desean eliminar.  |
+
+#### Ejemplo de uso
+```java
+try {
+   TransactionResponse<?> res = animales.delete(
+      Dictionary.fromArray("nombre", "Colibrí")
+   );
+} catch (Exception e) {
+   e.printStackTrace();
+}
+```
+#### Valor de retorno
+Este método retorna un objeto de tipo `TransactionResponse` con el resultado de la operación.
+
+### Método `compile()`
+Este método crea la base de datos del `Schema`, y la tabla con sus respectivos campos, en caso de no existir alguno o ninguno.
+#### Sintaxis
+```java
+public void compile()
+```
+#### Ejemplo de uso
+```java
+animales.compile();
+```
