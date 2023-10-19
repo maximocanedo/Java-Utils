@@ -132,4 +132,129 @@ TransactionResponse<?> res2 = personas.delete(
 print(res.status ? "El registro se eliminó correctamente. " : "No se eliminó ningún registro. ");
 // Imprime "El registro se eliminó correctamente. ".
 ```
+Podemos comprobar que se efectuó la eliminación si ejecutamos de nuevo el código SQL anterior y observamos que ahora el registro con ID N.º 1 fue eliminado.
+```sql
+SELECT * FROM personas
+```
+| id | nombre  | correo                 |
+|----|---------|------------------------|
+| 2  | Julia   | julia.1990@hotmail.com |
+
+### Claves foráneas y referencias a otros Schemas
+Supongamos que ahora necesitamos otro `Schema` que almacene las direcciones de las personas en el `Schema` personas.
+```java
+Schema direcciones = new max.Schema("direcciones", "bdPersonas") {{
+   setProperties(
+      new SchemaProperty("id") {{
+         required = true;
+         type = Types.INTEGER;
+         primary = true;
+         autoIncrement = true;
+      }},
+      new SchemaProperty("direccion") {{
+         required = true;
+         type = Types.VARCHAR;
+         maxlength = 100;
+      }},
+      new SchemaProperty("persona_id") {{
+         type = Types.INTEGER;
+         ref = personas.ref("id");
+         required = true;
+      }}
+   );
+}};
+```
+Este Schema cuenta con las siguientes propiedades:
+- Id: Entero autonumérico, clave primaria.
+- Dirección: Requerido, de tipo varchar(100).
+- Persona_Id: Entero que hace referencia a la propiedad `id` del Schema personas.
+
+De esta forma, al intentar validar o añadir un registro en la base de datos por medio de este Schema, validará también si `persona_id` hace referencia a un `id` del Schema personas.
+
+Ejemplo de uso:
+```java
+TransactionResponse<?> resultadoInsercion = direcciones.create(
+      Dictionary.fromArray(
+         "direccion", "Avenida Lacaze 1150",
+         "persona_id", 1
+      ),
+      Dictionary.fromArray(
+         "direccion", "Av. 9 de Julio 1350 3º Piso",
+         "persona_id", 2
+      ),
+      Dictionary.fromArray( 
+         "direccion", "Avenida Cazón 750",
+         "persona_id", 2
+      )
+   );
+print("Se añadieron con éxito " + resultadoInsercion.rowsAffected + " columna/s. ");
+// Imprime "Se añadieron con éxito 2 columna/s. ".
+```
+En este ejemplo se pretenden añadir tres registros, pero se añaden dos porque el primero de ellos tiene un `persona_id` que no corresponde con ningún registro en el Schema personas.
+Podemos verificar que la operación haya salido bien si ejecutamos el siguiente código SQL:
+```sql
+SELECT * FROM direcciones;
+```
+| id | direccion                   | persona_id |
+|----|-----------------------------|------------|
+| 1  | Av. 9 de Julio 1350 3º Piso | 2          |
+| 2  | Avenida Cazón 750           | 2          |
+
+## API
+### Constructores
+Cuenta con un único constructor, que recibe el nombre de la tabla y el nombre de la base de datos.
+#### Sintaxis
+```java
+public Schema(String tableName, String dbName)
+```
+#### Parámetros
+| Parámetro | Tipo   | Descripción                                                   |
+|-----------|--------|---------------------------------------------------------------|
+| tableName | String | Nombre de la tabla a la cual estará ligado el objeto.         |
+| dbName    | String | Nombre de la base de datos a la cual estará ligado el objeto. |
+#### Ejemplo de uso
+```java
+Schema animales = new Schema("animales", "bdAnimales");
+```
+### Método `ref()`
+Devuelve un objeto `ReferenceInfo` que sirve para referenciar una propiedad a una propiedad de otro Schema.
+#### Sintaxis
+```java
+public ReferenceInfo ref(String propertyName)
+```
+#### Parámetros
+| Parámetro    | Tipo   | Descripción                                                   |
+|--------------|--------|---------------------------------------------------------------|
+| propertyName | String | Nombre de la columna o propiedad del Schema.                  |
+#### Ejemplo de uso
+```java
+ReferenceInfo refId = animales.ref("id");
+```
+#### Valor de retorno
+Este método retorna un objeto de tipo `ReferenceInfo`, que contiene el nombre de la tabla, el nombre de la columna, y el nombre de la base de datos.
+
+### Método `setProperties()`
+Establece las propiedades o columnas con las que contará el objeto `Schema`.
+#### Sintaxis
+```java
+public void setProperties(SchemaProperty... properties)
+```
+#### Parámetros
+| Parámetro  | Tipo           | Descripción                    |
+|------------|----------------|--------------------------------|
+| properties | SchemaProperty | Propiedades a añadir al Schema |
+#### Ejemplo de uso
+```java
+animales.setProperties(
+   new SchemaProperty("id") {{
+      required = true;
+      autoIncrement = true;
+      type = Types.INTEGER;
+   }},
+   new SchemaProperty("nombre") {{
+      type = Types.VARCHAR;
+      maxlength = 50;
+   }}
+);
+```
 
