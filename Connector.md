@@ -88,3 +88,102 @@ try {
   e.printStackTrace();
 }
 ```
+
+## API
+### `Connector(ConnectorSettings data, String database)`
+Constructor de la clase `Connector` que recibe una instancia de `ConnectorSettings` y el nombre de la base de datos.
+#### Sintaxis
+```java
+public Connector(ConnectorSettings data, String database)
+```
+#### Parámetros
+| Parámetro | Tipo              | Descripción                              |
+|-----------|-------------------|------------------------------------------|
+| data      | ConnectorSettings | Configuración para conectar al servidor. |
+| database  | String            | Nombre de la base de datos.              |
+
+
+### `Connector(String database)`
+Constructor de la clase `Connector` que recibe el nombre de la base de datos.
+#### Sintaxis
+```java
+public Connector(String database)
+```
+#### Parámetros
+| Parámetro | Tipo              | Descripción                              |
+|-----------|-------------------|------------------------------------------|
+| database  | String            | Nombre de la base de datos.              |
+
+
+### `Connector(ConnectorSettings data)`
+Constructor de la clase `Connector` que recibe una instancia de `ConnectorSettings` y usa la base de datos predeterminada. 
+#### Sintaxis
+```java
+public Connector(ConnectorSettings data)
+```
+#### Parámetros
+| Parámetro | Tipo              | Descripción                              |
+|-----------|-------------------|------------------------------------------|
+| data      | ConnectorSettings | Configuración para conectar al servidor. |
+
+### `Connector()`
+Constructor de la clase `Connector` que usa la configuración predeterminada.
+#### Sintaxis
+```java
+public Connector()
+```
+
+### Método `fetch()`
+Realiza una consulta que devuelve un conjunto de datos.
+#### Sintaxis
+```java
+public TransactionResponse<Dictionary> fetch(String query [, (Object[] | Dictionary) params]) throws SQLException
+```
+#### Parámetros
+| Parámetro | Tipo                   | Descripción                          |
+|-----------|------------------------|--------------------------------------|
+| query     | String                 | Consulta a ejecutar                  |
+| params    | Dictionary \| Object[] | Parámetros, en caso de requerirlos.  |
+
+#### Ejemplo de uso
+```java
+try {
+  TransactionResponse<Dictionary> res = myConnector.fetch(
+    "SELECT * FROM myTable"
+  );
+} catch (SQLException e) {
+  e.printStackTrace();
+}
+```
+#### Valor de retorno
+Este método devuelve un objeto del tipo `TransactionResponse<Dictionary>` con el resultado de la operación.
+
+### Método `transact()`
+Realiza una consulta que no devuelve un conjunto de datos. Ideal para ejecutar transacciones.
+#### Sintaxis
+```java
+public TransactionResponse<Dictionary> transact(String query [, (Object[] | Dictionary) params]) throws SQLException
+```
+#### Parámetros
+| Parámetro | Tipo                   | Descripción                          |
+|-----------|------------------------|--------------------------------------|
+| query     | String                 | Consulta a ejecutar                  |
+| params    | Dictionary \| Object[] | Parámetros, en caso de requerirlos.  |
+
+#### Ejemplo de uso
+```java
+try {
+  TransactionResponse<Dictionary> res = myConnector.transact(
+    "INSERT INTO myTable (id, nombre, apellido) SELECT @id, @nombre, @apellido",
+    Dictionary.fromArray(
+      "id", 9,
+      "nombre", "Mario",
+      "apellido", "González"
+    )
+  );
+} catch (SQLException e) {
+  e.printStackTrace();
+}
+```
+#### Valor de retorno
+Este método devuelve un objeto del tipo `TransactionResponse<Dictionary>` con el resultado de la operación.
