@@ -1,8 +1,12 @@
 # Schemas
 ## Introducción
 Un schema te permite definir la estructura de los registros que se pueden almacenar en una tabla o colección. Esto incluye la especificación de los campos que contendrán los registros y los tipos de datos que se esperan en cada campo. 
+
 Por ejemplo, podés definir un `Schema` para un objeto "Usuario" con campos como nombre, correo electrónico, y edad, y especificar qué tipo de datos se espera en cada campo (cadena, número, etc.).
-Los esquemas pueden incluir reglas de validación para garantizar que los datos cumplen con ciertos criterios. Esto puede incluir la validación de tipos de datos, requerimientos de campos obligatorios y otras restricciones de datos. La validación se realiza al llamar al método `validate()` pasándole un `Dictionary` con los datos a validar. Pero si el esquema está incluído en un objeto de tipo `IModel`, la validación se realiza automáticamente antes de intentar guardar un documento en la base de datos.
+
+Los esquemas pueden incluir reglas de validación para garantizar que los datos cumplen con ciertos criterios. Esto puede incluir la validación de tipos de datos, requerimientos de campos obligatorios y otras restricciones de datos. La validación se realiza al llamar al método `validate()` pasándole un `Dictionary` con los datos a validar. 
+
+Pero si el esquema está incluído en un objeto de tipo `IModel`, la validación se realiza automáticamente antes de intentar guardar un documento en la base de datos.
 
 ## Funcionamiento
 ### ¿Cómo crear un Schema?
