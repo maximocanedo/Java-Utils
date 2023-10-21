@@ -1,16 +1,14 @@
 # Schemas
 ## Introducción
-Un schema es una estructura de datos que permite validar registros de forma más eficiente. Está inspirado en las funcionalidades de Mongoose.
-Los Schemas funcionan como tablas en SQL. 
-Al definir un Schema, se definen sus propiedades o campos, con sus atributos, como el tipo de dato que se espera manejar, restricciones, referencias a otros Schemas o tablas, etc. 
-Luego de definirlos, se pueden usar para validar que los valores de un objeto Dictionary cumplan con las restricciones impuestas en el Schema.
+Un schema te permite definir la estructura de los registros que se pueden almacenar en una tabla o colección. Esto incluye la especificación de los campos que contendrán los registros y los tipos de datos que se esperan en cada campo. 
+Por ejemplo, podés definir un `Schema` para un objeto "Usuario" con campos como nombre, correo electrónico, y edad, y especificar qué tipo de datos se espera en cada campo (cadena, número, etc.).
+Los esquemas pueden incluir reglas de validación para garantizar que los datos cumplen con ciertos criterios. Esto puede incluir la validación de tipos de datos, requerimientos de campos obligatorios y otras restricciones de datos. La validación se realiza al llamar al método `validate()` pasándole un `Dictionary` con los datos a validar. Pero si el esquema está incluído en un objeto de tipo `IModel`, la validación se realiza automáticamente antes de intentar guardar un documento en la base de datos.
 
 ## Funcionamiento
 ### ¿Cómo crear un Schema?
 Para crear un Schema, podemos usar su constructor de la siguiente manera:
 ```java
-Schema personas = new max.Schema("personas", "bdPersonas") {{
-   setProperties(
+Schema personas = new max.Schema(
       new SchemaProperty("id") {{
          required = true;
          type = Types.INTEGER;
@@ -27,9 +25,8 @@ Schema personas = new max.Schema("personas", "bdPersonas") {{
          matches = "^[+]?[0-9\\s-]+$";
          trim = true;
          maxlength = 50
-      }},
-   );
-}};
+      }}
+);
 ```
 Hasta acá, tenemos un Schema que contiene una estructura de datos de personas:
  - Id (Clave primaria, de tipo entero, que se autoincrementa)
@@ -58,16 +55,18 @@ Dictionary diegoHerrera = Dictionary.fromArray(
    );
 SchemaValidationResult validacionDiego = personas.validate(diegoHerrera);
 print(validacionDiego.status ? "Las validaciones fueron un éxito. " : validacionDiego.message);
-// Imprime "A INTEGER object was provided, but this object type is not allowed in the Schema. ".
+// Imprime "A INTEGER object was provided, but a VARCHAR object was expected. ".
 ```
 En una próxima versión se implementarán Excepciones para manejar validaciones con resultado negativo.
 
 ### ¿Qué es compilar un Schema?
-Cuando se tiene un Schema listo, se puede usar el método `compile`, que crea la base de datos y la tabla con todos sus campos, en caso de no existir previamente.
+Los esquemas ya no cuentan con el método integrado `compile()` para compilarse.
+Para compilar un `Schema`, se debe incluir este en un objeto de tipo `IModel` correspondiente al servidor de base de datos que se va a utilizar, y luego llamando al método `compile()` de este último.
 Esto permite además, hacer uso de métodos de agregado, modificación y eliminación de registros.
 Ejemplo: 
 ```java
-personas.compile();
+IModel miModelo = new MySQLSchemaModel("personas", "bdejemplo", personas);
+miModelo.compile();
 ```
 
 ### Insertar un registro en la tabla vinculada al Schema
@@ -75,7 +74,7 @@ Mediante el uso del método `create()`, es posible añadir registros en la tabla
 Se recomienda cerciorarse de que el objeto `Schema` en cuestión ya haya ejecutado el método `compile()` previo a la ejecución de `create()`.
 Ejemplo de uso:
 ```java
-TransactionResponse<?> resultadoInsercion = personas.create(
+TransactionResponse<?> resultadoInsercion = miModelo.create(
       Dictionary.fromArray(
          "nombre", "Antonio",
          "correo", "antonio@gmail.com"
